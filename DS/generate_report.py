@@ -27,11 +27,17 @@ def esc(s):
     return s.replace("$", "\\$")
 
 def text_page(fig, title, paragraphs, fontsize=9):
-    fig.text(0.5, 0.95, title, ha="center", va="top", fontsize=14, fontweight="bold")
-    y = 0.88
+    fig.text(0.5, 0.97, title, ha="center", va="top", fontsize=14, fontweight="bold")
+    y = 0.92
+    line_h = 0.032
+    chars_per_line = 105
     for p in paragraphs:
+        if not p.strip():
+            y -= 0.012
+            continue
         fig.text(0.08, y, esc(p), fontsize=fontsize, va="top", wrap=True)
-        y -= max(0.5, len(p) / 140)
+        n_lines = max(1, -(-len(p) // chars_per_line))
+        y -= n_lines * line_h
     return fig
 
 
