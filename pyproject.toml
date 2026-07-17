@@ -1,0 +1,10 @@
+[project]
+name = "primetrade"
+version = "0.1.0"
+description = "Binance Futures Testnet trading bot CLI"
+readme = "AI/README.md"
+requires-python = ">=3.10.5"
+dependencies = ["python-binance", "python-dotenv", "rich"]
+
+[project.scripts]
+trading-bot = "AI.trading_bot.cli:main"
