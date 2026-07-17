@@ -1,52 +1,41 @@
-# PrimeTrade - Binance Futures Testnet Trading Bot
+# PrimeTrade DS — Hyperliquid Trader Performance & Market Sentiment Analysis
 
-CLI trading bot for Binance Futures Testnet (USDT-M). Places MARKET and LIMIT orders.
+Analyze the relationship between Hyperliquid trader performance and Bitcoin Fear & Greed Index sentiment. 211k trades, 32 traders, 246 coins across 2018–2025.
 
-## Setup
+## Structure
 
-1. Activate your Binance Futures Testnet account at [testnet.binancefuture.com](https://testnet.binancefuture.com)
-2. Generate API credentials with futures trading enabled
-3. Set environment variables:
-
-```bash
-set BINANCE_TESTNET_API_KEY=your_api_key
-set BINANCE_TESTNET_API_SECRET=your_api_secret
+```
+DS/
+├── load_datasets.py        — Load, clean, merge CSVs on date
+├── explore_data.py         — EDA: F&G timeseries, PnL distribution
+├── trader_performance.py   — Per-trader PnL, win rate, fees, volume
+├── sentiment_analysis.py   — F&G correlation, scatter/box plots
+├── insights.py             — Buy/sell asymmetry, coin analysis, fee drag
+├── bonus_analysis.py       — t-test, ANOVA, KMeans clustering, time series decomp, risk metrics
+├── generate_report.py      — PDF report generator (15+ pages, all plots embedded)
+├── test_analysis.py        — 8 unit tests
+├── DS_Analysis_Report.pdf  — Final report with insights & recommendations
+└── plots/                  — All generated visualizations
 ```
 
-4. Install dependencies:
+## Key Findings
 
-```bash
-pip install -r requirements.txt
-```
+- **Negative sentiment-trading correlation** (r = −0.25) — traders trade more during Fear, less during Greed
+- **Best PnL during Extreme Greed** ($67.89 avg) — trade with momentum
+- **Sells outperform buys** — 85.9% WR vs 78.0%
+- **5 trader clusters** — from high-frequency broad to focused high-conviction
+- **4/32 traders** lose more to fees than PnL
+- **ANOVA confirms** PnL varies significantly across sentiment (p = 3e-6)
 
 ## Usage
 
 ```bash
-# Market BUY
-python -m trading_bot.cli --symbol BTCUSDT --side BUY --type MARKET --quantity 0.001
-
-# Limit SELL
-python -m trading_bot.cli --symbol BTCUSDT --side SELL --type LIMIT --quantity 0.001 --price 70000
-
-# Or via installed script
-trading-bot --symbol BTCUSDT --side BUY --type MARKET --quantity 0.001
+cd DS
+pip install pandas matplotlib seaborn scipy scikit-learn statsmodels
+pytest test_analysis.py -v        # run tests
+python generate_report.py          # regenerate PDF
 ```
 
-## Project Structure
+## Report
 
-```
-trading_bot/
-  bot/
-    client.py         # Binance Futures API wrapper
-    logging_config.py # Logging setup
-    orders.py         # Order placement logic
-    validators.py     # Input validation
-  cli.py              # CLI entry point
-```
-
-## Assumptions
-
-- Orders use USDT-M futures on testnet
-- API keys from env vars `BINANCE_TESTNET_API_KEY` / `BINANCE_TESTNET_API_SECRET`
-- LIMIT orders use GTC time-in-force
-- Quantity/lot size validation is server-side
+[DS_Analysis_Report.pdf](DS/DS_Analysis_Report.pdf) — 15+ pages with embedded plots, statistical tests, and 7 actionable recommendations.
